@@ -20,6 +20,9 @@
     "typescript": "^5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^18.0.0"
+    "@types/node": "^20.0.0"
+  },
+  "volta": {
+    "node": "20.19.5"
   }
 }
