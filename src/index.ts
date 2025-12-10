@@ -4,32 +4,33 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { DocBaseClient } from './client.js';
 
-// 環境変数から設定を取得
+// Get configuration from environment variables
 const API_TOKEN = process.env.DOCBASE_API_TOKEN;
 const DOMAIN = process.env.DOCBASE_DOMAIN;
 
-// APIトークンとドメインが設定されているか確認
+// Check if API token and domain are set
 if (!API_TOKEN || !DOMAIN) {
-  console.error('環境変数 DOCBASE_API_TOKEN と DOCBASE_DOMAIN を設定してください');
+  console.error('Please set environment variables DOCBASE_API_TOKEN and DOCBASE_DOMAIN');
   process.exit(1);
 }
 
-// DocBase APIクライアントの初期化
+// Initialize DocBase API client
 const docbaseClient = new DocBaseClient(API_TOKEN, DOMAIN);
 
-// MCPサーバーを作成
+// Create MCP server
 const server = new McpServer({
   name: "DocBase MCP Server",
   version: "1.0.0",
 });
 
-// 検索ツールを追加
+// Add search tool
 server.tool(
   "search_posts",
+  "Search for posts in DocBase.",
   {
-    q: z.string().optional().describe("検索文字列"),
-    page: z.number().optional().describe("ページ番号"),
-    per_page: z.number().optional().describe("ページあたりのメモ数"),
+    q: z.string().optional().describe("Search query string"),
+    page: z.number().optional().describe("Page number"),
+    per_page: z.number().optional().describe("Number of posts per page"),
   },
   async ({ q, page, per_page }) => {
     try {
@@ -57,11 +58,12 @@ server.tool(
   }
 );
 
-// メモ詳細取得ツールを追加
+// Add post detail retrieval tool
 server.tool(
   "get_post",
+  "Get detailed information of a post with the specified ID.",
   {
-    id: z.number().describe("メモID"),
+    id: z.number().describe("Post ID"),
   },
   async ({ id }) => {
     try {
@@ -85,7 +87,7 @@ server.tool(
   }
 );
 
-// サーバーを起動
+// Start server
 async function start() {
   try {
     const transport = new StdioServerTransport();
