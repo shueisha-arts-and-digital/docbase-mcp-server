@@ -10,6 +10,8 @@
 
 - [メモの検索 API](https://help.docbase.io/posts/92984)
 - [メモの詳細取得 API](https://help.docbase.io/posts/97204)
+- [メモの投稿 API](https://help.docbase.io/posts/92980)
+- [メモの更新 API](https://help.docbase.io/posts/92981)
 
 ## Install
 
@@ -21,7 +23,7 @@
 {
   "mcpServers": {
     "docbase": {
-      "autoApprove": ["search_posts", "get_post"],
+      "autoApprove": ["search_posts", "get_post"], // create_post と update_post は承認が必要です
       "disabled": false,
       "timeout": 60,
       "command": "npx",
