@@ -73,3 +73,30 @@ export interface GetPostParams {
 }
 
 export type GetPostResponse = DocBasePost;
+
+// メモ投稿API関連の型定義
+export interface CreatePostParams {
+  title: string;
+  body: string;
+  draft?: boolean;
+  tags?: string[];
+  scope?: string;
+  groups?: number[];
+  notice?: boolean;
+}
+
+export type CreatePostResponse = DocBasePost;
+
+// メモ更新API関連の型定義
+export interface UpdatePostParams {
+  id: number;
+  title?: string;
+  body?: string;
+  draft?: boolean;
+  tags?: string[];
+  scope?: string;
+  groups?: number[];
+  notice?: boolean;
+}
+
+export type UpdatePostResponse = DocBasePost;

@@ -87,13 +87,101 @@ server.tool(
   }
 );
 
+// Add post creation tool
+server.tool(
+  "create_post",
+  "Create a new post in DocBase.",
+  {
+    title: z.string().describe("Post title"),
+    body: z.string().describe("Post body"),
+    draft: z.boolean().optional().describe("Whether the post is a draft"),
+    tags: z.array(z.string()).optional().describe("Tags for the post"),
+    scope: z.string().optional().describe("Post scope"),
+    groups: z.array(z.number()).optional().describe("Group IDs that can access the post"),
+    notice: z.boolean().optional().describe("Whether to send a notice"),
+  },
+  async ({ title, body, draft, tags, scope, groups, notice }) => {
+    try {
+      const result = await docbaseClient.createPost({
+        title,
+        body,
+        draft,
+        tags,
+        scope,
+        groups,
+        notice,
+      });
+      
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          content: [{ type: "text", text: error.message }],
+          isError: true,
+        };
+      }
+      return {
+        content: [{ type: "text", text: "Unknown error" }],
+        isError: true,
+      };
+    }
+  }
+);
+
+// Add post update tool
+server.tool(
+  "update_post",
+  "Update an existing post in DocBase.",
+  {
+    id: z.number().describe("Post ID to update"),
+    title: z.string().optional().describe("Post title"),
+    body: z.string().optional().describe("Post body"),
+    draft: z.boolean().optional().describe("Whether the post is a draft"),
+    tags: z.array(z.string()).optional().describe("Tags for the post"),
+    scope: z.string().optional().describe("Post scope"),
+    groups: z.array(z.number()).optional().describe("Group IDs that can access the post"),
+    notice: z.boolean().optional().describe("Whether to send a notice"),
+  },
+  async ({ id, title, body, draft, tags, scope, groups, notice }) => {
+    try {
+      const result = await docbaseClient.updatePost({
+        id,
+        title,
+        body,
+        draft,
+        tags,
+        scope,
+        groups,
+        notice,
+      });
+      
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          content: [{ type: "text", text: error.message }],
+          isError: true,
+        };
+      }
+      return {
+        content: [{ type: "text", text: "Unknown error" }],
+        isError: true,
+      };
+    }
+  }
+);
+
 // Start server
 async function start() {
   try {
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.error(`DocBase MCP Server ready (Domain: ${DOMAIN})`);
-    console.error(`Available tools: search_posts, get_post`);
+        console.error(`DocBase MCP Server ready (Domain: ${DOMAIN})`);
+        console.error(`Available tools: search_posts, get_post, create_post, update_post`);
   } catch (error) {
     console.error('Error starting server:', error);
     process.exit(1);
